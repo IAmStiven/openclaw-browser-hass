@@ -1,23 +1,25 @@
 #!/bin/sh
 set -eu
 
-HOME_DIR="/home/openclaw-browser"
+SRC="/config/openclaw-browser"
+DST="/home/openclaw-browser"
 
-# If it's a symlink or file (your EEXIST case), nuke it and recreate as a dir
-if [ -L "$HOME_DIR" ] || [ -f "$HOME_DIR" ]; then
-  rm -rf "$HOME_DIR"
+# Ensure source exists (persistent)
+mkdir -p "$SRC"
+
+# Ensure destination exists as a REAL directory (not symlink/file)
+if [ -L "$DST" ] || [ -f "$DST" ]; then
+  rm -rf "$DST"
 fi
-mkdir -p "$HOME_DIR"
+mkdir -p "$DST"
 
-# Make it writable even if the add-on config dir is root-owned
-chmod -R 0777 "$HOME_DIR" || true
-
-# Prefer to drop to the expected non-root user if it exists
-if id openclaw-browser >/dev/null 2>&1; then
-  exec su -s /bin/sh openclaw-browser -c "$*"
-elif id sandbox-browser >/dev/null 2>&1; then
-  exec su -s /bin/sh sandbox-browser -c "$*"
-else
-  # fallback: run as root
-  exec "$@"
+# If not already mounted, bind-mount SRC -> DST
+# (mountpoint may not exist on all images; fall back to parsing /proc/mounts)
+if ! grep -qs " $DST " /proc/mounts; then
+  mount --bind "$SRC" "$DST"
 fi
+
+# Make it writable no matter what user bun/chrome runs as
+chmod -R 0777 "$SRC" || true
+
+exec "$@"
