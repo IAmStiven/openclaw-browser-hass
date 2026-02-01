@@ -59,8 +59,3 @@ export CLAWDBOT_BROWSER_VNC_PORT="5900"
 export CLAWDBOT_BROWSER_NOVNC_PORT="6080"
 
 echo "[openclaw] Options: headless=${CLAWDBOT_BROWSER_HEADLESS}, enable_novnc=${CLAWDBOT_BROWSER_ENABLE_NOVNC}"
-
-# IMPORTANT:
-# If this line errors later with "env: no command", it means the upstream image uses ENTRYPOINT,
-# and we need to explicitly call its startup command.
-exec /usr/bin/env "$@"
