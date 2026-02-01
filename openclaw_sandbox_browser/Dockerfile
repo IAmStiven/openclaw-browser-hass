@@ -1,19 +1,16 @@
 FROM ghcr.io/iamevanyt/openclaw-sandbox-browser:latest
 
-EXPOSE 9222
-EXPOSE 5900
-EXPOSE 6080
+EXPOSE 9222 5900 6080
 
-# Create persistent target + make the app's home point there
-# (symlink /home/sandbox-browser -> /config/sandbox-browser)
 USER root
-RUN mkdir -p /config/sandbox-browser \
+
+# Make persistent home under /config, and point expected path to it.
+# Use permissive perms so it works regardless of what UID the base image runs as.
+RUN mkdir -p /config/openclaw-browser \
  && mkdir -p /home \
- && rm -rf /home/sandbox-browser \
- && ln -s /config/sandbox-browser /home/sandbox-browser \
- && chown -R 1000:1000 /config/sandbox-browser
+ && rm -rf /home/openclaw-browser \
+ && ln -s /config/openclaw-browser /home/openclaw-browser \
+ && chmod -R 0777 /config/openclaw-browser
 
-# If the container already runs as sandbox-browser user, you can drop back.
-# (If you're not sure, you can omit USER and keep whatever base image uses.)
-
+# Keep the same command the upstream image uses
 CMD ["bun", "run", "start"]
