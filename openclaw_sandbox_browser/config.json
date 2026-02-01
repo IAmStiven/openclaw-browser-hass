@@ -2,7 +2,7 @@
   "name": "OpenClaw Sandbox Browser",
   "slug": "openclaw_sandbox_browser",
   "description": "Dockerized Google Chrome with CDP (9222) + optional VNC (5900) + NoVNC (6080).",
-  "version": "1.0.0-11",
+  "version": "1.0.0-12",
   "url": "https://github.com/iamevanyt/openclaw-sandbox-browser",
   "startup": "services",
   "boot": "auto",
@@ -29,9 +29,7 @@
     "enable_novnc": "bool"
   },
 
-  "map": [
-    { "type": "addon_config", "read_only": false, "path": "/home/openclaw-browser" }
-  ],
+  "map": ["addon_config:rw"],
 
 
   "privileged": ["SYS_ADMIN"]
