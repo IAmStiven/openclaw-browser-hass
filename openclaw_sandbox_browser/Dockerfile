@@ -1,7 +1,11 @@
+# Dockerfile
 FROM ghcr.io/iamevanyt/openclaw-sandbox-browser:latest
 
-# Home Assistant add-ons commonly run scripts from root
-COPY run.sh /run.sh
-RUN chmod +x /run.sh
+# Same target port as your compose service
+EXPOSE 9222
 
-ENTRYPOINT ["/run.sh"]
+# Same data directory as your compose volume mount
+VOLUME ["/home/sandbox-browser/.chrome"]
+
+# Explicitly match upstream default command
+CMD ["bun", "run", "start"]
