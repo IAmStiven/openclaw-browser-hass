@@ -1,13 +1,20 @@
-# Dockerfile
 FROM ghcr.io/iamevanyt/openclaw-sandbox-browser:latest
 
-# Same target port as your compose service
 EXPOSE 9222
 EXPOSE 5900
 EXPOSE 6080
 
-# Same data directory as your compose volume mount
-VOLUME ["/home/sandbox-browser/.chrome"]
+# Create persistent target + make the app's home point there
+# (symlink /home/sandbox-browser -> /config/sandbox-browser)
+USER root
+RUN mkdir -p /config/sandbox-browser \
+ && mkdir -p /home \
+ && rm -rf /home/sandbox-browser \
+ && ln -s /config/sandbox-browser /home/sandbox-browser \
+ && chown -R 1000:1000 /config/sandbox-browser
 
-# Explicitly match upstream default command
+# If the container already runs as sandbox-browser user, you can drop back.
+# (If you're not sure, you can omit USER and keep whatever base image uses.)
+USER 1000
+
 CMD ["bun", "run", "start"]
