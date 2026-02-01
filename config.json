@@ -1,0 +1,35 @@
+{
+  "name": "OpenClaw Sandbox Browser",
+  "slug": "openclaw_sandbox_browser",
+  "description": "Dockerized Google Chrome with CDP (9222) + optional VNC (5900) + NoVNC (6080).",
+  "version": "1.0.0",
+  "url": "https://github.com/iamevanyt/openclaw-sandbox-browser",
+  "startup": "services",
+  "boot": "auto",
+  "arch": ["amd64", "aarch64"],
+  "init": false,
+
+  "ports": {
+    "9222/tcp": 9222,
+    "5900/tcp": 5900,
+    "6080/tcp": 6080
+  },
+  "ports_description": {
+    "9222/tcp": "CDP (Chrome DevTools Protocol)",
+    "5900/tcp": "VNC (only when not headless)",
+    "6080/tcp": "NoVNC Web UI (only when not headless and enabled)"
+  },
+
+  "options": {
+    "headless": false,
+    "enable_novnc": true
+  },
+  "schema": {
+    "headless": "bool",
+    "enable_novnc": "bool"
+  },
+
+  "map": ["addon_config:rw"],
+
+  "privileged": ["SYS_ADMIN"]
+}
