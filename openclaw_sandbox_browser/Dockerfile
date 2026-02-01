@@ -15,6 +15,5 @@ RUN mkdir -p /config/sandbox-browser \
 
 # If the container already runs as sandbox-browser user, you can drop back.
 # (If you're not sure, you can omit USER and keep whatever base image uses.)
-USER 1000
 
 CMD ["bun", "run", "start"]
